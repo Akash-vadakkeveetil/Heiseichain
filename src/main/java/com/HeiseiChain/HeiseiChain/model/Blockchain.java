@@ -1,4 +1,4 @@
-package com.HeiseiChainSpringBoot.HeiseiChainSpringBoot.model;
+package com.HeiseiChain.HeiseiChain.model;
 
 import java.util.ArrayList;
 

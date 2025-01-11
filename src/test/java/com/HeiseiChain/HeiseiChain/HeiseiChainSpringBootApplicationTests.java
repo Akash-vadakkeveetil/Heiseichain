@@ -1,4 +1,4 @@
-package com.HeiseiChainSpringBoot.HeiseiChainSpringBoot;
+package com.HeiseiChain.HeiseiChain;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

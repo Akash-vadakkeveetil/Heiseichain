@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.HeiseiChainSpringBoot</groupId>
-	<artifactId>HeiseiChainSpringBoot</artifactId>
+	<artifactId>HeiseiChain</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>HeiseiChainSpringBoot</name>
 	<description>Conversion of java blockchain to spring boot</description>

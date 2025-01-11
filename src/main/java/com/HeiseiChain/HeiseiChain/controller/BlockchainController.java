@@ -1,7 +1,7 @@
-package com.HeiseiChainSpringBoot.HeiseiChainSpringBoot.controller;
+package com.HeiseiChain.HeiseiChain.controller;
 
-import com.HeiseiChainSpringBoot.HeiseiChainSpringBoot.model.Block;
-import com.HeiseiChainSpringBoot.HeiseiChainSpringBoot.model.Blockchain;
+import com.HeiseiChain.HeiseiChain.model.Block;
+import com.HeiseiChain.HeiseiChain.model.Blockchain;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
