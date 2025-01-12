@@ -1,5 +1,6 @@
 package com.HeiseiChain.HeiseiChain.model;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Block {
@@ -18,6 +19,12 @@ public class Block {
     public String calculateHash() {
         String input = previousHash + Long.toString(timestamp) + data;
         return org.apache.commons.codec.digest.DigestUtils.sha256Hex(input);
+    }
+
+    //human-readable form of timestamp
+    public String getFormattedTimestamp() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return sdf.format(new Date(timestamp));
     }
 
     // Getters and Setters
