@@ -24,3 +24,16 @@ Add blocks (POST /api/blockchain/add)
 Retrieve the blockchain (GET /api/blockchain)
 Stored the blockchain in-memory (non-persistent).
 
+
+Donor Creation
+http://localhost:8080/api/blockchain/register?username=donor1&role=donor
+
+Volunteer Creation
+http://localhost:8080/api/blockchain/register?username=volunteer2&role=volunteer
+
+Camp Creation
+http://localhost:8080/api/blockchain/register?username=camp1&role=camp
+
+Transaction Creation
+http://localhost:8080/api/blockchain/create?senderUsername=donor1&recipientUsername=volunteer2&value=25&metadata=donatio
+

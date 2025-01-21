@@ -1,30 +1,34 @@
 package com.HeiseiChain.HeiseiChain.model;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.List;
 
 public class Block {
     private String hash;
     private String previousHash;
-    private String data;
+    private List<Transaction> transactions;
     private long timestamp;
 
-    public Block(String data, String previousHash) {
-        this.data = data;
+    public Block(List<Transaction> transactions, String previousHash) {
+        this.transactions = transactions;
         this.previousHash = previousHash;
-        this.timestamp = new Date().getTime();
+        this.timestamp = System.currentTimeMillis();
         this.hash = calculateHash();
     }
 
     public String calculateHash() {
-        String input = previousHash + Long.toString(timestamp) + data;
-        return org.apache.commons.codec.digest.DigestUtils.sha256Hex(input);
+        StringBuilder input = new StringBuilder();
+        input.append(previousHash);
+        input.append(Long.toString(timestamp));
+
+        for (Transaction tx : transactions) {
+            input.append(tx.getTransactionId());
+        }
+
+        return org.apache.commons.codec.digest.DigestUtils.sha256Hex(input.toString());
     }
 
-    //human-readable form of timestamp
     public String getFormattedTimestamp() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        return sdf.format(new Date(timestamp));
+        return new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date(timestamp));
     }
 
     // Getters and Setters
@@ -44,12 +48,12 @@ public class Block {
         this.previousHash = previousHash;
     }
 
-    public String getData() {
-        return data;
+    public List<Transaction> getTransactions() {
+        return transactions;
     }
 
-    public void setData(String data) {
-        this.data = data;
+    public void setTransactions(List<Transaction> transactions) {
+        this.transactions = transactions;
     }
 
     public long getTimestamp() {
