@@ -24,25 +24,10 @@ public class BlockchainController {
     public String getBlockchain() {
         try {
             return blockchainService.getBlockchain();
-        /*    if (blockchain == null || blockchain.getChain() == null) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Blockchain is not initialized!");
-            }
-            return ResponseEntity.ok(blockchain);
-        */
         } catch (Exception e) {
             System.err.println("Error fetching blockchain: " + e.getMessage());
             return "Error";
-        /*    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("An error occurred while retrieving the blockchain. Please check the logs.");
-        */}
-    }
-
-
-
-    @PostMapping("/add")
-    public String addTransaction(@RequestBody Transaction transaction) {
-        blockchainService.addTransaction(transaction);
-        return "Transaction added!";
+        }
     }
 
     @GetMapping("/validate")
