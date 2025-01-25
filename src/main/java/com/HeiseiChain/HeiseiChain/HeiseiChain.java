@@ -8,5 +8,4 @@ public class HeiseiChain {
 	public static void main(String[] args) {
 		SpringApplication.run(HeiseiChain.class, args);
 	}
-
 }

@@ -4,6 +4,7 @@ import com.HeiseiChain.HeiseiChain.model.*;
 import org.springframework.stereotype.Service;
 
 import java.security.PublicKey;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -58,6 +59,36 @@ public class BlockchainService {
     public Wallet getWalletByUsername(String username) {
         return walletDatabase.get(username); // Retrieve wallet by username
     }
+
+    public String generateReport(long startTimestamp, long endTimestamp) {
+        StringBuilder report = new StringBuilder();
+        report.append("Blockchain Report\n");
+        report.append("Date Range: ")
+                .append(new Date(startTimestamp)).append(" to ")
+                .append(new Date(endTimestamp)).append("\n\n");
+
+        for (Block block : blockchain.getChain()) {
+            if (block.getTimestamp() >= startTimestamp && block.getTimestamp() <= endTimestamp) {
+                report.append("Block Number: ").append(blockchain.getChain().indexOf(block)).append("\n");
+                report.append("Hash: ").append(block.getHash()).append("\n");
+                report.append("Previous Hash: ").append(block.getPreviousHash()).append("\n");
+                report.append("Timestamp: ").append(block.getFormattedTimestamp()).append("\n");
+                report.append("Transactions:\n");
+
+                for (Transaction transaction : block.getTransactions()) {
+                    report.append("\tSender: ").append(transaction.getSender()).append("\n");
+                    report.append("\tRecipient: ").append(transaction.getRecipient()).append("\n");
+                    report.append("\tValue: ").append(transaction.getValue()).append("\n");
+                    report.append("\tMetadata: ").append(transaction.getMetadata()).append("\n");
+                }
+
+                report.append("\n");
+            }
+        }
+
+        return report.toString();
+    }
+
 
 
 }

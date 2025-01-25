@@ -1,12 +1,15 @@
 package com.HeiseiChain.HeiseiChain.model;
 
+import org.springframework.stereotype.Component;
+
 import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+@Component//to make it bean for injection at blockchain service
 public class Blockchain {
-    private List<Block> chain;
+    private final List<Block> chain;
     private List<Transaction> currentTransactions;
 
     public Blockchain() {
@@ -25,7 +28,7 @@ public class Blockchain {
 
     public void addTransaction(Transaction transaction) {
         currentTransactions.add(transaction);
-        if (currentTransactions.size() >= 1) {  // Add block when the list reaches a predefined size
+        if (!currentTransactions.isEmpty()) {  // Add block when the list reaches a predefined size
             addBlock(new Block(currentTransactions, getLatestBlock().getHash()));
             currentTransactions = new ArrayList<>();  // Reset transactions list after adding block
         }
@@ -103,7 +106,4 @@ public class Blockchain {
         }
         return "Unknown User";
     }
-
-
-
 }
