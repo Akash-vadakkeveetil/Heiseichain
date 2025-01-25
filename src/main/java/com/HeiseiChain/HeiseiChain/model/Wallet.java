@@ -32,8 +32,8 @@ public class Wallet {
             KeyPair keyPair = keyGen.generateKeyPair();
             privateKey = keyPair.getPrivate();
             publicKey = keyPair.getPublic();
-            System.out.println(role+"Public Key: " + publicKey);
-            System.out.println(role+"Private Key: " + privateKey);
+            //System.out.println(role+"Public Key: " + publicKey);
+            //System.out.println(role+"Private Key: " + privateKey);
 
         } catch (Exception e) {
             throw new RuntimeException(e);

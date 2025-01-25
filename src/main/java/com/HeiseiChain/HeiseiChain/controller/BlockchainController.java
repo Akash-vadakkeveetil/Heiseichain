@@ -78,7 +78,7 @@ public class BlockchainController {
                 return "Error: Could not retrieve wallet or private key for sender '" + senderUsername + "'!";
             }
 
-            System.out.println(senderWallet.privateKey);
+            //System.out.println(senderWallet.privateKey);
 
             // Step 4: Create inputs (UTXOs) for the transaction
             ArrayList<TransactionInput> inputs = new ArrayList<>();
@@ -126,7 +126,7 @@ public class BlockchainController {
 
             // Step 7: Process the transaction
             boolean success = transaction.processTransaction();
-            System.out.println(success);
+            //System.out.println(success);
             if (success) {
                 blockchainService.addTransaction(transaction);
 

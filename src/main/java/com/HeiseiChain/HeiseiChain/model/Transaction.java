@@ -78,7 +78,7 @@ public class Transaction {
                 transactionType +
                 Float.toString(value) +
                 metadata;
-        System.out.println("Data for signing: " + data);
+        //System.out.println("Data for signing: " + data);
         signature = StringUtil.applyECDSASig(privateKey, data); // Apply the ECDSA signature
     }
 
@@ -89,7 +89,7 @@ public class Transaction {
                 transactionType +
                 Float.toString(value) +
                 metadata;
-        System.out.println("Data for verification: " + data);
+        //System.out.println("Data for verification: " + data);
         return StringUtil.verifyECDSASig(sender, data, signature); // Verify the signature
     }
 
