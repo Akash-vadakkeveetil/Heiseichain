@@ -3,12 +3,16 @@ package com.HeiseiChain.HeiseiChain.controller;
 import com.HeiseiChain.HeiseiChain.model.*;
 import com.HeiseiChain.HeiseiChain.service.BlockchainService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.PublicKey;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,18 +44,21 @@ public class BlockchainController {
     public String registerUser(
             @RequestParam String username,
             @RequestParam String role) {
-        try {
-            Wallet newWallet = blockchainService.createWallet(role);
-            // Check if the public key was generated properly
-            if (newWallet.publicKey == null) {
-                return "Error: Public key generation failed!";
-            }
-            blockchainService.registerUser(newWallet,username);
 
-            return "User registered successfully!";
-        } catch (Exception e) {
-            return "Error registering user: " + e.getMessage();
-        }
+            if (blockchainService.getWalletByUsername(username) != null)
+                return "Username already in use";
+            try {
+                Wallet newWallet = blockchainService.createWallet(role);
+                // Check if the public key was generated properly
+                if (newWallet.publicKey == null) {
+                    return "Error: Public key generation failed!";
+                }
+                blockchainService.registerUser(newWallet, username);
+
+                return "User registered successfully!";
+            } catch (Exception e) {
+                return "Error registering user: " + e.getMessage();
+            }
     }
 
     @PostMapping("/create")
@@ -59,6 +66,7 @@ public class BlockchainController {
             @RequestParam String senderUsername,
             @RequestParam String recipientUsername,
             @RequestParam float value,
+            @RequestParam String transactionType,
             @RequestParam String metadata) {
         try {
             // Step 1: Fetch the sender's public key
@@ -66,6 +74,7 @@ public class BlockchainController {
             if (senderPublicKey == null) {
                 return "Error: Sender username '" + senderUsername + "' is not registered!";
             }
+
 
             // Step 2: Fetch the recipient's public key
             PublicKey recipientPublicKey = blockchainService.getPublicKeyByUsername(recipientUsername);
@@ -85,9 +94,9 @@ public class BlockchainController {
             ArrayList<TransactionInput> inputs = new ArrayList<>();
 
             // Skip UTXO checks if the metadata is "donation"
-            if (!"donation".equals(metadata)) {
+            if (!"donation".equals(transactionType) && !"bypass".equals(transactionType)) {
                 // Fetch UTXOs (unspent transaction outputs) for the sender
-                List<UTXO> availableUTXOs = senderWallet.getUTXOs();
+                List<UTXO> availableUTXOs = senderWallet.getUTXOs(metadata);
                 if (availableUTXOs == null || availableUTXOs.isEmpty()) {
                     return "Error: No UTXOs available for sender '" + senderUsername + "'!";
                 }
@@ -116,7 +125,7 @@ public class BlockchainController {
             Transaction transaction = new Transaction(
                     senderPublicKey,
                     recipientPublicKey,
-                    metadata,
+                    transactionType,
                     value,
                     metadata,
                     inputs
@@ -140,4 +149,25 @@ public class BlockchainController {
         }
     }
 
+    @PostMapping("/generateReport")
+    public ResponseEntity<byte[]> generateReport(
+            @RequestParam("startDateTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDateTime,
+            @RequestParam("endDateTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDateTime,
+            Model model) {
+
+        // Use the generateCSVReport method to create the CSV content
+        String csvReport = blockchainService.getReport(startDateTime, endDateTime);
+
+        // Convert the CSV string to bytes
+        byte[] csvBytes = csvReport.getBytes();
+
+        // Set response headers for downloading the file
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", "attachment; filename=blockchain_report.csv");
+
+        // Return the response with the CSV file content
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(csvBytes);
+    }
 }

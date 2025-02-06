@@ -29,21 +29,6 @@ public class ReportController {
     }
 
     // Handle report generation based on date and time range
-    @PostMapping("/generateReport")
-    public ResponseEntity<byte[]> generateReport(
-            @RequestParam("startDateTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDateTime,
-            @RequestParam("endDateTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDateTime,
-            Model model) {
 
-        // Generate the CSV file content as a byte array
-        ByteArrayInputStream reportStream = reportService.generateReport(startDateTime, endDateTime);
 
-        // Set response headers for downloading the file
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Disposition", "attachment; filename=blockchain_report.csv");
-
-        return ResponseEntity.ok()
-                .headers(headers)
-                .body(reportStream.readAllBytes());
-    }
 }
