@@ -113,9 +113,9 @@ public class Transaction {
 
         // Generate outputs (donation or volunteer service)
         float leftover = getInputsValue() - value; // Calculate leftover change after transaction
-        outputs.add(new TransactionOutput(this.recipient, value, transactionId)); // Send value to recipient
+        outputs.add(new TransactionOutput(this.recipient, value, transactionId,metadata)); // Send value to recipient
         if (leftover > 0) {
-            outputs.add(new TransactionOutput(this.sender, leftover, transactionId)); // Return leftover change to sender
+            outputs.add(new TransactionOutput(this.sender, leftover, transactionId,metadata)); // Return leftover change to sender
         }
 
         // Add outputs to UTXO list

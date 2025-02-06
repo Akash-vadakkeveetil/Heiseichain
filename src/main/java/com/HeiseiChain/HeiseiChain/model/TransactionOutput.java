@@ -9,14 +9,16 @@ public class TransactionOutput {
     public PublicKey recipient; // Recipient of the output (the new owner of these funds)
     public float value; // Amount of money or value being transferred
     public String parentTransactionId; // The ID of the transaction where this output was created
+    public String commodity;
 
     // Constructor for creating a new TransactionOutput
-    public TransactionOutput(PublicKey recipient, float value, String parentTransactionId) {
+    public TransactionOutput(PublicKey recipient, float value, String parentTransactionId, String commodity) {
         this.recipient = recipient;
         this.value = value;
         this.parentTransactionId = parentTransactionId;
+        this.commodity = commodity;
         this.id = StringUtil.applySha256(
-                StringUtil.getStringFromKey(recipient) + Float.toString(value) + parentTransactionId
+                StringUtil.getStringFromKey(recipient) + Float.toString(value) + parentTransactionId + commodity
         );
     }
 

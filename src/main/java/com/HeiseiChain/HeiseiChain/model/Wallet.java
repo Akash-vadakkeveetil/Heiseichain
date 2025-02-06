@@ -40,14 +40,14 @@ public class Wallet {
         }
     }
 
-    public List<UTXO> getUTXOs() {
+    public List<UTXO> getUTXOs(String metadata) {
         List<UTXO> utxos = new ArrayList<>();
 
         // Iterate through the global UTXO map and find UTXOs for this wallet
         for (TransactionOutput output : HeiseiChain.UTXOs.values()) {
-            if (output.recipient.equals(this.publicKey)) {
+            if (output.recipient.equals(this.publicKey) && output.commodity.equals(metadata)) {
                 // Add UTXO to the list if it belongs to this wallet
-                utxos.add(new UTXO(output.id, output.recipient, output.value));
+                utxos.add(new UTXO(output.id, output.recipient, output.value,output.commodity));
             }
         }
 

@@ -3,6 +3,9 @@ package com.HeiseiChain.HeiseiChain.model;
 import org.springframework.stereotype.Component;
 
 import java.security.PublicKey;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -98,12 +101,61 @@ public class Blockchain {
         return data.toString();
     }
 
-    private String findUserByPublicKey(PublicKey key, Map<String, Wallet> walletDatabase) {
+    public String findUserByPublicKey(PublicKey key, Map<String, Wallet> walletDatabase) {
         for (Map.Entry<String, Wallet> entry : walletDatabase.entrySet()) {
             if (entry.getValue().publicKey.equals(key)) {
                 return entry.getKey();
             }
         }
         return "Unknown User";
+    }
+
+    public String generateCSVReport(Map<String, Wallet> walletDatabase, LocalDateTime startDateTime, LocalDateTime endDateTime) {
+        StringBuilder csvData = new StringBuilder();
+
+        // Adding CSV headers
+        csvData.append("Block Number,Hash,Previous Hash,Timestamp,Transaction Count,Transactions\n");
+
+        for (int i = 0; i < chain.size(); i++) {
+            Block block = chain.get(i);
+
+            // Convert block timestamp to LocalDateTime
+            LocalDateTime blockDateTime = Instant.ofEpochMilli(block.getTimestamp())
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDateTime();
+
+            // Filter blocks by date range
+            if (blockDateTime.isBefore(startDateTime) || blockDateTime.isAfter(endDateTime)) {
+                continue;
+            }
+
+            // Prepare transaction details
+            StringBuilder transactionDetails = new StringBuilder();
+            if (block.getTransactions() != null && !block.getTransactions().isEmpty()) {
+                for (Transaction transaction : block.getTransactions()) {
+                    transactionDetails.append("Sender: ")
+                            .append(findUserByPublicKey(transaction.getSender(), walletDatabase))
+                            .append(" | Recipient: ")
+                            .append(findUserByPublicKey(transaction.getRecipient(), walletDatabase))
+                            .append(" | Value: ")
+                            .append(transaction.getValue())
+                            .append(" | Metadata: ")
+                            .append(transaction.getMetadata())
+                            .append(" || "); // Separator for transactions
+                }
+            } else {
+                transactionDetails.append("No transactions in this block");
+            }
+
+            // Add block data to CSV
+            csvData.append(i).append(",")
+                    .append(block.getHash()).append(",")
+                    .append(block.getPreviousHash()).append(",")
+                    .append(block.getFormattedTimestamp()).append(",")
+                    .append(block.getTransactions() != null ? block.getTransactions().size() : 0).append(",")
+                    .append("\"").append(transactionDetails.toString()).append("\"\n"); // Enclose transactions in quotes to handle commas
+        }
+
+        return csvData.toString();
     }
 }
